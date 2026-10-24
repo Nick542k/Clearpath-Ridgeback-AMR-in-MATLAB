@@ -1,0 +1,5 @@
+# Treat Simulink and binary data files as binary
+*.slx binary
+*.mat binary
+*.fig binary
+*.p binary

@@ -1,0 +1,22 @@
+# MATLAB / Simulink
+*.asv
+*.autosave
+*.m~
+*.slxc
+*.slx.r*
+slprj/
+sfprj/
+*.matlab
+matlab_crash_dump.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Windows / OS
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
