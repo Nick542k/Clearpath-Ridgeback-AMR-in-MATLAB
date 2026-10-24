@@ -266,12 +266,30 @@ function build_ridgeback_3d_simulation(goalX, goalY, goalYaw)
     totalSimTime = t_arr(end);
     fprintf('      Trajectory generated: %.2f seconds (%d points)\n', totalSimTime, length(t_arr));
 
-    assignin('base', 'sim_traj_x', [t_arr, x_arr]);
-    assignin('base', 'sim_traj_y', [t_arr, y_arr]);
-    assignin('base', 'sim_traj_yaw', [t_arr, yaw_arr]);
+    sim_traj_x = [t_arr, x_arr];
+    sim_traj_y = [t_arr, y_arr];
+    sim_traj_yaw = [t_arr, yaw_arr];
+
+    assignin('base', 'sim_traj_x', sim_traj_x);
+    assignin('base', 'sim_traj_y', sim_traj_y);
+    assignin('base', 'sim_traj_yaw', sim_traj_yaw);
+
+    % Save persistent trajectory so opening .slx directly never throws workspace errors
+    current_target_point = [goalX, goalY, goalYaw];
+    save('default_trajectory.mat', 'sim_traj_x', 'sim_traj_y', 'sim_traj_yaw', 'w_selected', 'current_target_point');
+
+    % Configure PreLoadFcn and InitFcn so Simulink automatically loads trajectory if workspace is cleared
+    cb = sprintf([...
+        'if ~evalin(''base'', ''exist(''''sim_traj_x'''', ''''var'''')'')\n' ...
+        '    if exist(''default_trajectory.mat'', ''file'')\n' ...
+        '        evalin(''base'', ''load(''''default_trajectory.mat'''')'');\n' ...
+        '    end\n' ...
+        'end\n']);
+    set_param(target_model, 'PreLoadFcn', cb);
+    set_param(target_model, 'InitFcn', cb);
 
     set_param(target_model, 'StopTime', num2str(totalSimTime));
-    save_system(target_model);
+    save_system(target_model, [], 'OverwriteIfChangedOnDisk', true);
 
     fprintf('[6/6] Model updated and saved as %s.slx.\n', target_model);
     fprintf('      Wheels sitting exactly at ground level Z = 0.00m.\n');
