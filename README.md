@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/26ce1131-e78c-4670-998f-7aeded8de5bc
+
 # Clearpath Ridgeback Autonomous 3D Navigation Simulation
 
 Welcome to the **Clearpath Ridgeback 3D Navigation Simulation** in MATLAB & Simscape Multibody.
